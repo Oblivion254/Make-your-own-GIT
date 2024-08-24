@@ -5,19 +5,26 @@ function Git(name){
     this.HEAD = null;
 }
 
-function Commit(id, message){
+function Commit(id, parent, message){
     this.id = id;
     this.message = message;
+    this.parent = parent;
 }
 
 Git.prototype.commit = function(message){
-    var commit = new Commit(++this.lastCommitId, message);
+    var commit = new Commit(++this.lastCommitId, this.HEAD, message);
     this.HEAD = commit;
     return commit;
 }
 
 Git.prototype.log = function(){
-    var history = [];
+    var commit = this.HEAD;
+    history = [];
+
+    while(commit){
+        history.push(commit);
+        commit = commit.parent;
+    }
     return history;
 }
 
